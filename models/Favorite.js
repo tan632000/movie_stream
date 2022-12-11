@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const FavoriteSchema = new mongoose.Schema(
   {
@@ -22,4 +22,4 @@ const FavoriteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Favorite", FavoriteSchema);
+module.exports = mongoose.model("Favorite", FavoriteSchema);

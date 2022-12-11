@@ -1,15 +1,19 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/users.js";
-import bannerRoutes from "./routes/banners.js";
-import favoriteRoutes from "./routes/favorites.js";
-import movieRoutes from "./routes/movies.js";
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const bodyParser = require('body-parser')
+const authRoutes = require("./routes/auth.js");
+const userRoutes = require("./routes/users.js");
+const bannerRoutes = require("./routes/banners.js");
+const favoriteRoutes = require("./routes/favorites.js");
+const movieRoutes = require("./routes/movies.js");
 
 const app = express();
+app.use(cors())
+app.use(bodyParser.json())
 dotenv.config();
-
+mongoose.set('strictQuery', true);
 const connect = () => {
   mongoose
     .connect(process.env.MONGO)
@@ -27,7 +31,7 @@ app.use("/api/banners", bannerRoutes);
 app.use("/api/favorite", favoriteRoutes);
 app.use("/api/movie", movieRoutes);
 
-app.listen(8800, () => {
+app.listen(8900, () => {
   connect();
   console.log("connected");
 });

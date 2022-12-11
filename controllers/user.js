@@ -1,7 +1,7 @@
-import { createError } from "../error.js";
-import User from "../models/User.js";
+const { createError } = require("../error.js");
+const User = require("../models/User.js");
 
-export const update = async (req, res, next) => {
+const update = async (req, res, next) => {
   if (req.params.id === req.user.id) {
     try {
       const updatedUser = await User.findByIdAndUpdate(
@@ -20,7 +20,7 @@ export const update = async (req, res, next) => {
   }
 };
 
-export const deleteUser = async (req, res, next) => {
+const deleteUser = async (req, res, next) => {
   if (req.params.id === req.user.id) {
     try {
       await User.findByIdAndDelete(req.params.id);
@@ -33,7 +33,7 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const getUser = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     res.status(200).json(user);
@@ -41,3 +41,10 @@ export const getUser = async (req, res, next) => {
     next(err);
   }
 };
+
+
+module.exports = {
+  update,
+  deleteUser,
+  getUser
+}

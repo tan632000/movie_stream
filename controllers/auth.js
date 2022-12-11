@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import User from "../models/User.js";
-import { createError } from "../error.js";
-import jwt from "jsonwebtoken";
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+const { createError } = require("../error.js");
 
-export const signup = async (req, res, next) => {
+const signup = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
@@ -16,7 +15,7 @@ export const signup = async (req, res, next) => {
   }
 };
 
-export const signin = async (req, res, next) => {
+const signin = async (req, res, next) => {
   try {
     const user = await User.findOne({ name: req.body.name });
     if (!user) return next(createError(404, "User not found!"));
@@ -39,7 +38,7 @@ export const signin = async (req, res, next) => {
   }
 };
 
-export const googleAuth = async (req, res, next) => {
+const googleAuth = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -68,3 +67,9 @@ export const googleAuth = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports = {
+  signin,
+  signup,
+  googleAuth
+}
