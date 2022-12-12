@@ -1,8 +1,9 @@
 const {db} = require('../db.js')
-const { query, collection, getDocs, orderBy, startAt, endAt } = require("firebase/firestore");
+const cloudinary = require('../lib/cloudinary.js')
 
 const add = async (req, res) => {
-    const {img, name, type, video, uid} = req.body;
+    const {img, name, type, video} = req.body;
+    console.log(111);
     await db.collection('movie').add({
         name: name,
         img: img,
@@ -39,13 +40,36 @@ const getAll = async (req, res) => {
     await db.collection('movie')
         // .where('type', '==', type)
         .orderBy('name')
-        .startAt((+page - 1) * 10)
-        .limit(+limit).get().then((snapshot) => {
+        .startAt((parseInt(page) - 1) * 10)
+        .limit(parseInt(limit)).get().then((snapshot) => {
         snapshot.forEach(element => {
             result.push(element.data())
         });
     })
     res.send(result)
+}
+
+const uploadVideo = (req, res) => {
+    let typeFile = '';
+    if (req.file) {
+        if (req.file.mimetype === 'video/mp4') {
+            typeFile = 'video'
+        } else {
+            typeFile = 'image'
+        }
+        cloudinary.uploader.upload(req.file.path,
+            {
+                resource_type: 'video',
+                folder: typeFile
+            },
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send(err)
+                }
+                return res.status(200).send(result)
+        })
+    }
 }
 
 module.exports = {
@@ -54,4 +78,5 @@ module.exports = {
     remove,
     get,
     getAll,
+    uploadVideo
 }

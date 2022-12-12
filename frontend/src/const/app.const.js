@@ -10,7 +10,7 @@ export const FILM_CATEGORIES = [
   },
   {
     value: 2,
-    label: "TV Show",
+    label: "TV Drama",
   },
   {
     value: 3,

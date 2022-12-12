@@ -1,13 +1,42 @@
-import React from "react";
-import { Box, Button, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import clsx from "clsx";
 import { ImageConstant, PathConstant } from "const";
 import { AppTextField } from "components";
 import { NoSsr } from "@mui/core";
+import axiosClient from "api";
+import cookie from 'js-cookie'
+import router from "next/router";
 
 const Login = () => {
   const classes = useStyles();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+
+  const submit = (e) => {
+    e.preventDefault()
+    axiosClient.post('/auth/signin', {
+      email,
+      password
+    }).then((data) => {
+      if (data.status === 200) {
+        const user = data.data.payload.user;
+        cookie.set('token_rgs_pt', data.data.payload.token, { expires: 1 })
+        localStorage.setItem('user_id', JSON.stringify(user._id))
+        router.push('/');
+      }
+    })
+  }
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value)
+  }
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value)
+  }
 
   return (
     <NoSsr>
@@ -15,11 +44,13 @@ const Login = () => {
         <Box className={classes.inputWrapper}>
           <Typography variant="h5">Sign In</Typography>
           <Stack mt={3} mb={2} spacing={2}>
-            <AppTextField placeholder="Enter email" required />
-            <AppTextField placeholder="Password" type="password" required />
+            {/* <AppTextField placeholder="Enter email" required />
+            <AppTextField placeholder="Password" type="password" required /> */}
+            <TextField placeholder="Enter email" onChange={onChangeEmail} />
+            <TextField placeholder="Password" onChange={onChangePassword} />
           </Stack>
           <Box className={classes.actions}>
-            <Button variant="containedPrimary" href={PathConstant.ROOT}>
+            <Button variant="containedPrimary" onClick={(e) => submit(e)}>
               Sign in
             </Button>
             <FormControlLabel control={<Checkbox className={classes.checkbox} />} label="Remember Me" />

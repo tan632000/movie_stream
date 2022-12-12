@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import clsx from "clsx";
 import MainLayout from "layouts/MainLayout";
 import { AddMovieDialog, MovieList, SearchBar } from "components";
+import axiosClient from "api";
 
 const Movies = () => {
   const classes = useStyles();
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [listMovies, setListMovies] = useState([]);
+
+  const page = 1;
+  const limit = 10;
+
+  useEffect(() => {
+    axiosClient.get(`/movie/list?limit=${limit}&page=${page}`)
+    .then((data) => {
+      setListMovies(data.data)
+    });
+  }, []);
 
   return (
     <MainLayout>
@@ -26,7 +38,7 @@ const Movies = () => {
             </Stack>
           </Box>
 
-          <MovieList data={MOCK_MOVIES} p={2.5} />
+          <MovieList data={listMovies} p={2.5} />
         </Box>
       </Container>
 
@@ -34,14 +46,6 @@ const Movies = () => {
     </MainLayout>
   );
 };
-
-const MOCK_MOVIES = Array.from(new Array(7)).map(() => ({
-  img: "https://www.filmofilia.com/wp-content/uploads/2013/02/Inception-Banner.jpg",
-  name: "INCEPTION",
-  type: "Home",
-  video:
-    "https://firebasestorage.googleapis.com/v0/b/movie-streaming-91d94.appspot.com/o/Skyscrapers%20-%2091744.mp4?alt=media&token=e7cbcb72-7209-4290-b483-7817f7b6e2fc",
-}));
 
 const useStyles = makeStyles(theme => ({
   container: {

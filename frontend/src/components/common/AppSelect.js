@@ -1,4 +1,4 @@
-import React from "react";
+import {React} from "react";
 import { FormControl, NativeSelect, InputBase, Typography } from "@mui/material";
 import { makeStyles, withStyles } from "@mui/styles";
 import PropTypes from "prop-types";
@@ -10,6 +10,9 @@ const AppSelect = ({ label, data, ...props }) => {
   const isObject = obj => {
     return Object.prototype.toString.call(obj) === "[object Object]";
   };
+  const handleChangeType = (e) => {
+    props.onChange(e.target.value)
+  }
 
   return (
     <FormControl className={classes.root}>
@@ -23,6 +26,7 @@ const AppSelect = ({ label, data, ...props }) => {
         classes={{ select: classes.nativeRoot }}
         IconComponent={() => <ArrowDownIcon className={classes.icon} />}
         {...props}
+        onChange={handleChangeType}
       >
         <option value="" />
         {data.map((item, index) => {

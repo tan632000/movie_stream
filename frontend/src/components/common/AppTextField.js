@@ -10,6 +10,10 @@ const AppTextField = ({ InputProps, InputLabelProps, ...otherProps }) => {
 
   const classes = useStyles();
 
+  const handleChangeInput = (e) => {
+    otherProps.onChange(e.target.value)
+  }
+
   return (
     <TextField
       fullWidth
@@ -30,6 +34,8 @@ const AppTextField = ({ InputProps, InputLabelProps, ...otherProps }) => {
         },
         ...otherInputLabelProps,
       }}
+      onChange={handleChangeInput}
+      name={name}
       {...otherProps}
     />
   );

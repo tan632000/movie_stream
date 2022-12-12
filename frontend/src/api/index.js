@@ -1,30 +1,20 @@
-import { ApiConstant, AppConstant } from "const";
-import apisauce from "apisauce";
-import Cookie from "js-cookie";
+import axios from 'axios'
+import cookie from 'js-cookie'
 
-export const defaultConfig = {
-  baseURL: ApiConstant.BASE_URL,
-  headers: ApiConstant.HEADER_DEFAULT,
-  timeout: ApiConstant.TIMEOUT,
-};
+const axiosClient = axios.create({
+  baseURL: '/api',
+  headers: {
+    'content-type': 'application/json',
+  },
+})
 
-export const defaultFormConfig = {
-  baseURL: ApiConstant.BASE_URL,
-  headers: ApiConstant.HEADER_FORM,
-  timeout: ApiConstant.TIMEOUT,
-};
-
-const Api = apisauce.create(defaultConfig);
-
-export const createApiWithToken = (initConfig = defaultConfig, token) => {
-  let newToken = token || Cookie.get(AppConstant.KEY_TOKEN);
-
-  if (newToken) {
-    initConfig.headers.Authorization = `Bearer ${newToken}`;
+axiosClient.interceptors.request.use((config) => {
+  const token = cookie.get('token_rgs_pt')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
+  return config
+})
 
-  return apisauce.create(initConfig);
-};
+export default axiosClient
 
-export default Api;
-export const createApi = (initConfig = defaultConfig, token) => createApiWithToken(initConfig, token);

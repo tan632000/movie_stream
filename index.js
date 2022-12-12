@@ -11,7 +11,7 @@ const movieRoutes = require("./routes/movies.js");
 
 const app = express();
 app.use(cors())
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 dotenv.config();
 mongoose.set('strictQuery', true);
 const connect = () => {
